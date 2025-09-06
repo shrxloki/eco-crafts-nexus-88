@@ -27,7 +27,7 @@ type ProfileForm = z.infer<typeof profileSchema>;
 export const ProfileSection = () => {
   const [isEditing, setIsEditing] = useState(false);
   const { toast } = useToast();
-  const { user, updateUser } = useAuth();
+  const { userProfile, updateUserProfile } = useAuth();
 
   if (!user) {
     return null;
