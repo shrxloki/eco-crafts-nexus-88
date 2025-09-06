@@ -23,7 +23,7 @@ export const DashboardPage = () => {
 
             {/* Tabs */}
             <Tabs defaultValue="sell" className="w-full">
-              <TabsList className="grid w-full grid-cols-4 mb-8">
+              <TabsList className="grid w-full grid-cols-3 mb-8">
                 <TabsTrigger value="sell" className="flex items-center space-x-2">
                   <Plus className="w-4 h-4" />
                   <span>Sell Item</span>
@@ -36,7 +36,6 @@ export const DashboardPage = () => {
                   <ShoppingBag className="w-4 h-4" />
                   <span>Purchases</span>
                 </TabsTrigger>
-                
               </TabsList>
 
               <TabsContent value="sell">
@@ -49,10 +48,6 @@ export const DashboardPage = () => {
 
               <TabsContent value="purchases">
                 <PurchaseHistory />
-              </TabsContent>
-
-              <TabsContent value="profile">
-                <ProfileSection />
               </TabsContent>
             </Tabs>
           </div>
