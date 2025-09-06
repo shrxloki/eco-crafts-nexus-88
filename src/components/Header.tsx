@@ -60,14 +60,7 @@ export const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link to="/marketplace" className={`text-sm font-medium transition-colors duration-200 ${isActive('/marketplace') ? 'text-primary' : 'text-foreground hover:text-primary'}`}>
-              Products
-            </Link>
-            <Link to="/dashboard" className={`text-sm font-medium transition-colors duration-200 ${isActive('/dashboard') ? 'text-primary' : 'text-foreground hover:text-primary'}`}>
-              Sell Items
-            </Link>
-          </nav>
+          
 
           {/* Actions */}
           <div className="flex items-center space-x-4">
