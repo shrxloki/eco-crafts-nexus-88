@@ -12,7 +12,6 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { ProfileSection } from '@/components/ProfileSection';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
-
 export const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -20,8 +19,17 @@ export const Header = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, isAuthenticated, logout } = useAuth();
-  const { cartItems, cartItemCount, updateQuantity, removeItem } = useCart();
+  const {
+    user,
+    isAuthenticated,
+    logout
+  } = useAuth();
+  const {
+    cartItems,
+    cartItemCount,
+    updateQuantity,
+    removeItem
+  } = useCart();
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -29,9 +37,7 @@ export const Header = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  
   const isActive = (path: string) => location.pathname === path;
-  
   const handleAuthClick = () => {
     if (isAuthenticated) {
       navigate('/dashboard');
@@ -39,16 +45,10 @@ export const Header = () => {
       navigate('/login');
     }
   };
-
   if (!isAuthenticated || !user) {
     return null; // Or show a login prompt
   }
-  return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled 
-        ? 'bg-background/95 backdrop-blur-lg border-b border-border/20' 
-        : 'bg-transparent'
-    }`}>
+  return <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-background/95 backdrop-blur-lg border-b border-border/20' : 'bg-transparent'}`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -61,24 +61,10 @@ export const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link 
-              to="/marketplace" 
-              className={`text-sm font-medium transition-colors duration-200 ${
-                isActive('/marketplace') 
-                  ? 'text-primary' 
-                  : 'text-foreground hover:text-primary'
-              }`}
-            >
+            <Link to="/marketplace" className={`text-sm font-medium transition-colors duration-200 ${isActive('/marketplace') ? 'text-primary' : 'text-foreground hover:text-primary'}`}>
               Products
             </Link>
-            <Link 
-              to="/dashboard" 
-              className={`text-sm font-medium transition-colors duration-200 ${
-                isActive('/dashboard') 
-                  ? 'text-primary' 
-                  : 'text-foreground hover:text-primary'
-              }`}
-            >
+            <Link to="/dashboard" className={`text-sm font-medium transition-colors duration-200 ${isActive('/dashboard') ? 'text-primary' : 'text-foreground hover:text-primary'}`}>
               Sell Items
             </Link>
           </nav>
@@ -86,15 +72,7 @@ export const Header = () => {
           {/* Actions */}
           <div className="flex items-center space-x-4">
             {/* Search Bar */}
-            <div className="hidden lg:flex items-center space-x-3">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                <Input
-                  placeholder="Search products..."
-                  className="pl-10 w-64 bg-background/50 border-border/20"
-                />
-              </div>
-            </div>
+            
 
             {/* Profile Section */}
             <Popover>
@@ -122,12 +100,10 @@ export const Header = () => {
                         <span className="text-sm font-medium text-foreground">
                           {user.firstName} {user.lastName}
                         </span>
-                        {user.verified && (
-                          <div className="flex items-center gap-1">
+                        {user.verified && <div className="flex items-center gap-1">
                             <Shield className="w-3 h-3 text-primary" />
                             <Badge variant="secondary" className="text-xs px-1 py-0">Verified</Badge>
-                          </div>
-                        )}
+                          </div>}
                       </div>
                       <div className="flex items-center gap-2 mb-1">
                         <Star className="w-3 h-3 text-primary fill-primary" />
@@ -152,24 +128,15 @@ export const Header = () => {
                   </div>
                 </div>
                 <div className="p-2">
-                  <button
-                    onClick={() => navigate('/dashboard')}
-                    className="flex items-center gap-3 w-full px-2 py-2 text-sm text-foreground hover:bg-accent rounded-md transition-colors duration-200"
-                  >
+                  <button onClick={() => navigate('/dashboard')} className="flex items-center gap-3 w-full px-2 py-2 text-sm text-foreground hover:bg-accent rounded-md transition-colors duration-200">
                     <User className="w-4 h-4" />
                     My Dashboard
                   </button>
-                  <button
-                    onClick={() => setIsProfileOpen(true)}
-                    className="flex items-center gap-3 w-full px-2 py-2 text-sm text-foreground hover:bg-accent rounded-md transition-colors duration-200"
-                  >
+                  <button onClick={() => setIsProfileOpen(true)} className="flex items-center gap-3 w-full px-2 py-2 text-sm text-foreground hover:bg-accent rounded-md transition-colors duration-200">
                     <Settings className="w-4 h-4" />
                     Settings
                   </button>
-                  <button
-                    onClick={logout}
-                    className="flex items-center gap-3 w-full px-2 py-2 text-sm text-foreground hover:bg-accent rounded-md transition-colors duration-200"
-                  >
+                  <button onClick={logout} className="flex items-center gap-3 w-full px-2 py-2 text-sm text-foreground hover:bg-accent rounded-md transition-colors duration-200">
                     <LogOut className="w-4 h-4" />
                     Sign Out
                   </button>
@@ -178,73 +145,45 @@ export const Header = () => {
             </Popover>
 
             {/* Cart */}
-            <button
-              onClick={() => setIsCartOpen(true)}
-              className="relative p-2 text-foreground hover:text-primary transition-colors duration-200"
-            >
+            <button onClick={() => setIsCartOpen(true)} className="relative p-2 text-foreground hover:text-primary transition-colors duration-200">
               <ShoppingBag className="w-5 h-5" />
-              {cartItemCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center">
+              {cartItemCount > 0 && <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center">
                   {cartItemCount}
-                </span>
-              )}
+                </span>}
             </button>
 
             {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-foreground hover:text-primary transition-colors duration-200"
-            >
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-2 text-foreground hover:text-primary transition-colors duration-200">
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-border/20 bg-background/95 backdrop-blur-lg">
+        {isMobileMenuOpen && <div className="md:hidden border-t border-border/20 bg-background/95 backdrop-blur-lg">
             <nav className="py-4 space-y-2">
-              <Link 
-                to="/marketplace" 
-                className="block px-4 py-2 text-sm font-medium text-foreground hover:text-primary transition-colors duration-200"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
+              <Link to="/marketplace" className="block px-4 py-2 text-sm font-medium text-foreground hover:text-primary transition-colors duration-200" onClick={() => setIsMobileMenuOpen(false)}>
                 Products
               </Link>
-              <Link 
-                to="/dashboard" 
-                className="block px-4 py-2 text-sm font-medium text-foreground hover:text-primary transition-colors duration-200"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
+              <Link to="/dashboard" className="block px-4 py-2 text-sm font-medium text-foreground hover:text-primary transition-colors duration-200" onClick={() => setIsMobileMenuOpen(false)}>
                 Sell Items
               </Link>
-              <button
-                onClick={() => {
-                  handleAuthClick();
-                  setIsMobileMenuOpen(false);
-                }}
-                className="w-full text-left px-4 py-2 text-sm font-medium text-foreground hover:text-primary transition-colors duration-200"
-              >
+              <button onClick={() => {
+            handleAuthClick();
+            setIsMobileMenuOpen(false);
+          }} className="w-full text-left px-4 py-2 text-sm font-medium text-foreground hover:text-primary transition-colors duration-200">
                 {isAuthenticated ? 'Dashboard' : 'Sign In'}
               </button>
             </nav>
-          </div>
-        )}
+          </div>}
       </div>
 
-      <CartModal 
-        isOpen={isCartOpen} 
-        onClose={() => setIsCartOpen(false)} 
-        cartItems={cartItems} 
-        onUpdateQuantity={updateQuantity} 
-        onRemoveItem={removeItem} 
-      />
+      <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} cartItems={cartItems} onUpdateQuantity={updateQuantity} onRemoveItem={removeItem} />
 
       <Dialog open={isProfileOpen} onOpenChange={setIsProfileOpen}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <ProfileSection />
         </DialogContent>
       </Dialog>
-    </header>
-  );
+    </header>;
 };
