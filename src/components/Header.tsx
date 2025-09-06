@@ -123,7 +123,7 @@ export const Header = () => {
                 <div className="p-2">
                   <button onClick={() => navigate('/dashboard')} className="flex items-center gap-3 w-full px-2 py-2 text-sm text-foreground hover:bg-accent rounded-md transition-colors duration-200">
                     <User className="w-4 h-4" />
-                    My Dashboard
+                    Sell Item
                   </button>
                   <button onClick={() => setIsProfileOpen(true)} className="flex items-center gap-3 w-full px-2 py-2 text-sm text-foreground hover:bg-accent rounded-md transition-colors duration-200">
                     <Settings className="w-4 h-4" />
