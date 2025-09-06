@@ -138,12 +138,7 @@ export const Header = () => {
             </Popover>
 
             {/* Cart */}
-            <button onClick={() => setIsCartOpen(true)} className="relative p-2 text-foreground hover:text-primary transition-colors duration-200">
-              <ShoppingBag className="w-5 h-5" />
-              {cartItemCount > 0 && <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center">
-                  {cartItemCount}
-                </span>}
-            </button>
+            
 
             {/* Mobile Menu Button */}
             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-2 text-foreground hover:text-primary transition-colors duration-200">
