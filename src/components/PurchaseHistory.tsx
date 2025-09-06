@@ -169,7 +169,10 @@ export const PurchaseHistory = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => console.log('Reorder:', purchase.id)}
+                        onClick={() => {
+                          // Navigate to product page for reordering
+                          window.location.href = `/product/${purchase.id}`;
+                        }}
                         className="w-full"
                       >
                         <RefreshCw className="w-4 h-4 mr-1" />

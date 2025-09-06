@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { ArrowRight, Sparkles, Shield, Recycle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 import heroImage from '@/assets/hero-marketplace.jpg';
 export const HeroSection = () => {
+  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const features = [{
     icon: Shield,
@@ -57,11 +59,18 @@ export const HeroSection = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12 animate-fade-in-scale">
-            <Button className="btn-hero text-lg px-8 py-4 group">
+            <Button 
+              className="btn-hero text-lg px-8 py-4 group"
+              onClick={() => navigate('/marketplace')}
+            >
               Start Shopping
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
             </Button>
-            <Button variant="secondary" className="btn-secondary-hero text-lg px-8 py-4">
+            <Button 
+              variant="secondary" 
+              className="btn-secondary-hero text-lg px-8 py-4"
+              onClick={() => navigate('/login')}
+            >
               List Your Items
             </Button>
           </div>

@@ -4,6 +4,8 @@ import { TestimonialsSection } from '@/components/TestimonialsSection';
 import { ProductCard } from '@/components/ProductCard';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, TrendingUp } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Sample product data
 const featuredProducts = [{
@@ -71,13 +73,25 @@ const featuredProducts = [{
   condition: "excellent" as const
 }];
 export const LandingPage = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
   const handleAddToCart = (id: number) => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    // Cart functionality would be implemented here
     console.log('Added to cart:', id);
-    // TODO: Implement add to cart functionality
   };
+
   const handleToggleFavorite = (id: number) => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    // Favorite functionality would be implemented here
     console.log('Toggled favorite:', id);
-    // TODO: Implement favorite functionality
   };
   return <div className="min-h-screen">
       <HeroSection />
