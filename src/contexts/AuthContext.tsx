@@ -1,49 +1,21 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
-// User data type
-export interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone?: string;
-  location: string;
-  bio?: string;
-  avatar: string;
-  rating: number;
-  verified: boolean;
-  memberSince: string;
-  totalSales: number;
-  totalPurchases: number;
-}
+import { User, Session } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 // Auth context type
 interface AuthContextType {
   user: User | null;
+  session: Session | null;
   isAuthenticated: boolean;
-  login: (user: User) => void;
-  logout: () => void;
-  updateUser: (userData: Partial<User>) => void;
+  isLoading: boolean;
+  signUp: (email: string, password: string, fullName?: string) => Promise<{ error: any }>;
+  signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signInWithGoogle: () => Promise<{ error: any }>;
+  signOut: () => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// Sample user data - in a real app, this would come from an API
-const defaultUser: User = {
-  id: '1',
-  firstName: 'Sarah',
-  lastName: 'Chen',
-  email: 'sarah.chen@example.com',
-  phone: '+1 (555) 123-4567',
-  location: 'San Francisco, CA',
-  bio: 'Passionate about sustainable living and finding quality pre-loved items. I love furniture restoration and vintage finds.',
-  avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b5bc?w=400&h=400&fit=crop',
-  rating: 4.9,
-  verified: true,
-  memberSince: 'March 2023',
-  totalSales: 47,
-  totalPurchases: 23,
-};
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -51,48 +23,124 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
 
-  // Initialize with default user - in a real app, check localStorage/sessionStorage
   useEffect(() => {
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-      setIsAuthenticated(true);
-    } else {
-      // Auto-login with default user for demo purposes
-      setUser(defaultUser);
-      setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(defaultUser));
-    }
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setIsAuthenticated(!!session?.user);
+        setIsLoading(false);
+      }
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setIsAuthenticated(!!session?.user);
+      setIsLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  const login = (userData: User) => {
-    setUser(userData);
-    setIsAuthenticated(true);
-    localStorage.setItem('user', JSON.stringify(userData));
-  };
+  const signUp = async (email: string, password: string, fullName?: string) => {
+    const redirectUrl = `${window.location.origin}/`;
+    
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: redirectUrl,
+        data: fullName ? {
+          full_name: fullName
+        } : undefined
+      }
+    });
 
-  const logout = () => {
-    setUser(null);
-    setIsAuthenticated(false);
-    localStorage.removeItem('user');
-  };
-
-  const updateUser = (userData: Partial<User>) => {
-    if (user) {
-      const updatedUser = { ...user, ...userData };
-      setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
+    if (error) {
+      toast({
+        title: "Sign up failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Check your email",
+        description: "We've sent you a confirmation link to complete your signup.",
+      });
     }
+
+    return { error };
+  };
+
+  const signIn = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      toast({
+        title: "Sign in failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+
+    return { error };
+  };
+
+  const signInWithGoogle = async () => {
+    const redirectUrl = `${window.location.origin}/`;
+    
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: redirectUrl,
+      }
+    });
+
+    if (error) {
+      toast({
+        title: "Google sign in failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+
+    return { error };
+  };
+
+  const signOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    
+    if (error) {
+      toast({
+        title: "Sign out failed", 
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+
+    return { error };
   };
 
   const value = {
     user,
+    session,
     isAuthenticated,
-    login,
-    logout,
-    updateUser,
+    isLoading,
+    signUp,
+    signIn,
+    signInWithGoogle,
+    signOut,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
