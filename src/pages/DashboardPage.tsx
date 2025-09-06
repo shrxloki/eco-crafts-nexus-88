@@ -6,10 +6,8 @@ import { PurchaseHistory } from '@/components/PurchaseHistory';
 import { ProfileSection } from '@/components/ProfileSection';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Package, Plus, ShoppingBag, User } from 'lucide-react';
-
 export const DashboardPage = () => {
-  return (
-    <Layout>
+  return <Layout>
       <div className="pt-20 min-h-screen">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="max-w-6xl mx-auto">
@@ -38,10 +36,7 @@ export const DashboardPage = () => {
                   <ShoppingBag className="w-4 h-4" />
                   <span>Purchases</span>
                 </TabsTrigger>
-                <TabsTrigger value="profile" className="flex items-center space-x-2">
-                  <User className="w-4 h-4" />
-                  <span>Profile</span>
-                </TabsTrigger>
+                
               </TabsList>
 
               <TabsContent value="sell">
@@ -63,6 +58,5 @@ export const DashboardPage = () => {
           </div>
         </div>
       </div>
-    </Layout>
-  );
+    </Layout>;
 };
